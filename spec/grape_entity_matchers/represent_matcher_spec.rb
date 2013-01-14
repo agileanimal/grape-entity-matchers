@@ -13,7 +13,7 @@ describe GrapeEntityMatchers do
     end
   end
 
-  context 'instance methods' do
+  context 'matchers' do
     subject{ Person::Entity }
     
     let(:entity){ Person::Entity }
