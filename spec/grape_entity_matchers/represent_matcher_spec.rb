@@ -45,6 +45,7 @@ describe GrapeEntityMatchers do
     
     it { should represent(:dog).using(PetEntity) }
     it { should represent(:cat).as(:cat).using(PetEntity) }
+    it { should_not represent(:cat).using(PetEntity) }
 
   end
 end

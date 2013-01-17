@@ -42,13 +42,15 @@ module GrapeEntityMatchers
         message << "#{@subject} didn't expose #{@expected_representable} as expected: #{@subject.exposures[@expected_representable]}" unless verify_exposure
         message << "#{@subject} didn't call the method #{@actual_representation || @expected_representable} to get #{@expected_representable} from the test class.\n" unless check_methods
         message << "#{@subject} return the correct value for #{@expected_representable}." unless check_value
+        message
       end
-
+      
       def negative_failure_message
         message = ""
-        message << "Didn't expect #{@subject} to expose #{@expected_representable} correctly: #{@subject.exposures[@expected_representable]}" if verify_exposure
+        message << "Didn't expect #{@subject} to expose #{@expected_representable} correctly: #{@subject.exposures[@expected_representable]} \n" if verify_exposure
         message << "Didn't expect #{@subject} to call #{@actual_representation || @expected_representable} to get #{@expected_representable} from the test class.\n" if check_methods
-        message << "Didn't expect #{@subject} to return the correct value for #{@expected_representable}." if check_value
+        message << "Didn't expect #{@subject} to return the correct value for #{@expected_representable}.\n" if check_value
+        message
       end
 
       def description
