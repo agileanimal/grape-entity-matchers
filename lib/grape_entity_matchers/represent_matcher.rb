@@ -45,11 +45,14 @@ module GrapeEntityMatchers
       end
 
       def negative_failure_message
-        "Didn't expect #{@expected_representable} to be called on mock, but it was anyways"
+        message = ""
+        message << "Didn't expect #{@subject} to expose #{@expected_representable} correctly: #{@subject.exposures[@expected_representable]}" if verify_exposure
+        message << "Didn't expect #{@subject} to call #{@actual_representation || @expected_representable} to get #{@expected_representable} from the test class.\n" if check_methods
+        message << "Didn't expect #{@subject} to return the correct value for #{@expected_representable}." if check_value
       end
 
       def description
-        "should call #{@expected_representable} on the subject class"
+        "Ensures that #{@subject} properly obtains the value of #{@expected_representable} from a mock class."
       end
       
       private
