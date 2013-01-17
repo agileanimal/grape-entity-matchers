@@ -3,10 +3,15 @@ require 'grape_entity'
 
 describe GrapeEntityMatchers do
   before(:all) do
+    class PetEntity < Grape::Entity
+      expose :name, :age
+    end
     class Person
       include Grape::Entity::DSL
       entity :name, :age do
         expose :date_of_birth, :as => :brithday
+        expose :cat, :as => :cat, :using => PetEntity
+        expose :dog, :using => PetEntity
         expose :secret, :if => lambda{ |person, options| person.authorized? }
         expose :super_dooper_secret, :as => :top_secret, :if => lambda{ |person, options| person.authorized? }
       end
@@ -14,9 +19,7 @@ describe GrapeEntityMatchers do
   end
 
   context 'matchers' do
-    subject{ Person::Entity }
-    
-    let(:entity){ Person::Entity }
+    subject(:entity){ Person::Entity }
 
     # TODO: move the tests to this format to shadow the thoughtbot tests.
     # it { should represent(:name) }
@@ -39,6 +42,9 @@ describe GrapeEntityMatchers do
     it { should represent(:super_dooper_secret).as(:top_secret).when( :authorized? => true ) }
     it { should_not represent(:super_dooper_secret).as(:top_secret).when( :authorized? => false ) }
     it { should_not represent(:super_dooper_secret).when( :authorized? => true ) }
+    
+    it { should represent(:dog).using(PetEntity) }
+    it { should represent(:cat).as(:cat).using(PetEntity) }
 
   end
 end
