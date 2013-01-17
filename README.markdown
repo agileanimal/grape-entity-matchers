@@ -12,9 +12,6 @@ Here are some examples of the matchers in use:
 
 ``` ruby
 it { should represent(:date_of_birth).as(:brithday) }
-    
-it { should_not represent(:t_shirt_size) }
-it { should_not represent(:t_shirt_size).as(:brithday) }
 it { should_not represent(:name).as(:brithday) }
 it { should_not represent(:date_of_birth) }
     
@@ -23,7 +20,9 @@ it { should_not represent(:secret).when( :authorized? => false ) }
     
 it { should represent(:super_dooper_secret).as(:top_secret).when( :authorized? => true ) }
 it { should_not represent(:super_dooper_secret).as(:top_secret).when( :authorized? => false ) }
-it { should_not represent(:super_dooper_secret).when( :authorized? => true ) }
+
+it { should represent(:dog).using(PetEntity) }
+it { should represent(:cat).as(:kitty).using(PetEntity) }
 ```
 
 ## Installation
