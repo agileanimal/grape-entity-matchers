@@ -60,7 +60,7 @@ module GrapeEntityMatchers
       private
       
       def check_methods
-        representee = mock("RepresetedObject")
+        representee = double("RepresetedObject")
         representee.should_receive(@expected_representable).and_return(:value)       
         representee.should_receive(@conditions.keys.first).and_return(@conditions.values.first) unless @conditions.nil?
         
