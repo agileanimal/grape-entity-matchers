@@ -33,6 +33,11 @@ module GrapeEntityMatchers
         self
       end
 
+      def with_root(root)
+        @root = root
+        self
+      end
+
       def failure_message
         # why did it fail???
         # 3 options, exposure, object not called, value not returned.
@@ -60,12 +65,17 @@ module GrapeEntityMatchers
       private
       
       def check_methods
-        representee = mock("RepresetedObject")
+        representee = double("RepresetedObject")
         representee.should_receive(@expected_representable).and_return(:value)       
         representee.should_receive(@conditions.keys.first).and_return(@conditions.values.first) unless @conditions.nil?
         
-        @serialized_hash = @subject.represent(representee).serializable_hash
-          
+        representation = @subject.represent(representee)
+        @serialized_hash = if @root
+                             representation[@root.to_s].serializable_hash
+                           else
+                             representation.serializable_hash
+                           end
+
         begin
           RSpec::Mocks::verify  # run mock verifications
           methods_called = true
@@ -98,7 +108,6 @@ module GrapeEntityMatchers
           @serialized_hash[@actual_representation || @expected_representable] == :value
         end
       end
-      
     end
   end
 end
