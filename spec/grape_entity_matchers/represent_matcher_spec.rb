@@ -9,17 +9,21 @@ describe GrapeEntityMatchers do
     class Person
       include Grape::Entity::DSL
       entity :name, :age do
-        expose :date_of_birth, :as => :brithday
+        expose :date_of_birth, :as => :birthday
         expose :cat, :as => :cat, :using => PetEntity
         expose :dog, :using => PetEntity
         expose :secret, :if => lambda{ |person, options| person.authorized? }
         expose :super_dooper_secret, :as => :top_secret, :if => lambda{ |person, options| person.authorized? }
       end
     end
+    class Vet < Grape::Entity
+      root 'vets', 'vet'
+      expose :name
+    end
   end
 
   context 'matchers' do
-    subject(:entity){ Person::Entity }
+    subject(:entity) { Person::Entity }
 
     # TODO: move the tests to this format to shadow the thoughtbot tests.
     # it { should represent(:name) }
@@ -29,10 +33,10 @@ describe GrapeEntityMatchers do
     
     
     
-    it { should represent(:date_of_birth).as(:brithday) }
+    it { should represent(:date_of_birth).as(:birthday) }
     
     it { should_not represent(:t_shirt_size) }
-    it { should_not represent(:t_shirt_size).as(:brithday) }
+    it { should_not represent(:t_shirt_size).as(:birthday) }
     it { should_not represent(:name).as(:brithday) }
     it { should_not represent(:date_of_birth) }
     
@@ -47,5 +51,10 @@ describe GrapeEntityMatchers do
     it { should represent(:cat).as(:cat).using(PetEntity) }
     it { should_not represent(:cat).using(PetEntity) }
 
+  end
+
+  context 'matchers within a root' do
+    subject(:entity) { Vet }
+    it { should represent(:name).with_root('vet') }
   end
 end
