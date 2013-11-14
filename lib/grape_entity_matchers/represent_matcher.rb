@@ -5,7 +5,7 @@ module GrapeEntityMatchers
     def represent(representable)
       RepresentMatcher.new(representable)
     end
-      
+
     class RepresentMatcher
       def initialize(representable)
         @expected_representable = representable
@@ -17,17 +17,22 @@ module GrapeEntityMatchers
 
         check_methods && verify_exposure && check_value
       end
-      
+
       def as(representation)
         @actual_representation = representation
         self
       end
-      
+
+      def format_with(formatter)
+        @formatter = formatter
+        self
+      end
+
       def when(conditions)
         @conditions = conditions
         self
       end
-      
+
       def using(other_entity)
         @other_entity = other_entity
         self
@@ -49,7 +54,7 @@ module GrapeEntityMatchers
         message << "#{@subject} return the correct value for #{@expected_representable}." unless check_value
         message
       end
-      
+
       def negative_failure_message
         message = ""
         message << "Didn't expect #{@subject} to expose #{@expected_representable} correctly: #{@subject.exposures[@expected_representable]} \n" if verify_exposure
@@ -61,14 +66,14 @@ module GrapeEntityMatchers
       def description
         "Ensures that #{@subject} properly obtains the value of #{@expected_representable} from a mock class."
       end
-      
+
       private
-      
+
       def check_methods
         representee = double("RepresetedObject")
-        representee.should_receive(@expected_representable).and_return(:value)       
+        representee.should_receive(@expected_representable).and_return(:value)
         representee.should_receive(@conditions.keys.first).and_return(@conditions.values.first) unless @conditions.nil?
-        
+
         representation = @subject.represent(representee)
         @serialized_hash = if @root
                              representation[@root.to_s].serializable_hash
@@ -83,14 +88,15 @@ module GrapeEntityMatchers
           # here one can use #{e} to construct an error message
           methods_called = false
         end
-        
+
         methods_called
       end
-      
+
       def verify_exposure
         hash = {}
         hash[:using] = @other_entity unless @other_entity.nil?
         hash[:as] = @actual_representation unless @actual_representation.nil?
+        hash[:format_with] = @formatter if @formatter
 
         if @conditions.nil?
           @subject.exposures[@expected_representable] == hash
@@ -99,7 +105,7 @@ module GrapeEntityMatchers
           exposures.delete(:if) != nil && exposures == hash
         end
       end
-      
+
       def check_value
         if @other_entity
           # we aren't setting a value here, so it's going to be empty
