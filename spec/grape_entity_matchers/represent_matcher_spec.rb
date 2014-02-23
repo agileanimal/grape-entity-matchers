@@ -20,6 +20,7 @@ describe GrapeEntityMatchers do
       root 'vets', 'vet'
       expose :name
     end
+    nil
   end
 
   context 'matchers' do
@@ -27,11 +28,11 @@ describe GrapeEntityMatchers do
 
     # TODO: move the tests to this format to shadow the thoughtbot tests.
     # it { should represent(:name) }
-    it "should ensure the representation includes the specified property" do
-      entity.should represent :name
+    context "should ensure the representation includes the specified property" do
+      it { should represent :name}
     end
     
-    
+    it { should represent :name}
     
     it { should represent(:date_of_birth).as(:birthday) }
     
@@ -42,7 +43,7 @@ describe GrapeEntityMatchers do
     
     it { should represent(:secret).when( :authorized? => true ) }
     it { should_not represent(:secret).when( :authorized? => false ) }
-    
+
     it { should represent(:super_dooper_secret).as(:top_secret).when( :authorized? => true ) }
     it { should_not represent(:super_dooper_secret).as(:top_secret).when( :authorized? => false ) }
     it { should_not represent(:super_dooper_secret).when( :authorized? => true ) }

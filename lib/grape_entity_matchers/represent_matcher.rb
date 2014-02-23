@@ -1,4 +1,5 @@
-require 'rspec/mocks'
+require "rspec/mocks"
+require "rspec/mocks/standalone"
 
 module GrapeEntityMatchers
   module RepresentMatcher
@@ -30,6 +31,8 @@ module GrapeEntityMatchers
       
       def using(other_entity)
         @other_entity = other_entity
+        @represented_attribute  = double("RepresetedAttribute")      
+        @other_entity.exposures.keys.each {|key| allow(@represented_attribute ).to receive(key).and_return(:value)}
         self
       end
 
@@ -46,15 +49,23 @@ module GrapeEntityMatchers
         message = ""
         message << "#{@subject} didn't expose #{@expected_representable} as expected: #{@subject.exposures[@expected_representable]}" unless verify_exposure
         message << "#{@subject} didn't call the method #{@actual_representation || @expected_representable} to get #{@expected_representable} from the test class.\n" unless check_methods
-        message << "#{@subject} return the correct value for #{@expected_representable}." unless check_value
+        message << "#{@subject} didn't return the correct value for #{@expected_representable}. (#{@serialized_hash[@actual_representation || @expected_representable] } != #{@represented_attribute || :value})" unless check_value
         message
       end
       
+      def failure_message_when_negated
+        message = ""
+        message << "Didn't expect #{@subject} to expose #{@expected_representable} correctly: #{@subject.exposures[@expected_representable]} \n" if verify_exposure
+        message << "Didn't expect #{@subject} to call #{@actual_representation || @expected_representable} to get #{@expected_representable} from the test class.\n" if check_methods
+        message << "Didn't expect #{@subject} to return the correct value for #{@expected_representable}. (#{@serialized_hash[@actual_representation || @expected_representable] } != #{@represented_attribute || :value})" if check_value
+        message
+      end
+
       def negative_failure_message
         message = ""
         message << "Didn't expect #{@subject} to expose #{@expected_representable} correctly: #{@subject.exposures[@expected_representable]} \n" if verify_exposure
         message << "Didn't expect #{@subject} to call #{@actual_representation || @expected_representable} to get #{@expected_representable} from the test class.\n" if check_methods
-        message << "Didn't expect #{@subject} to return the correct value for #{@expected_representable}.\n" if check_value
+        message << "Didn't expect #{@subject} to return the correct value for #{@expected_representable}. (#{@serialized_hash[@actual_representation || @expected_representable] } != #{@represented_attribute || :value})" if check_value
         message
       end
 
@@ -63,16 +74,27 @@ module GrapeEntityMatchers
       end
       
       private
+
+      def limit_exposure_to_method(entity, method)
+        allow(entity).to receive(:valid_exposures).and_return(  
+          entity.exposures.slice(method)
+        )
+      end
       
       def check_methods
-        representee = double("RepresetedObject")
-        representee.should_receive(@expected_representable).and_return(:value)       
-        representee.should_receive(@conditions.keys.first).and_return(@conditions.values.first) unless @conditions.nil?
+        @representee = double("RepresetedObject")
+        @represented_attribute ||= :value
+
+        expect(@representee).to receive(@expected_representable).and_return(@represented_attribute)       
+        expect(@representee).to receive(@conditions.keys.first).and_return(@conditions.values.first) unless @conditions.nil?
         
-        representation = @subject.represent(representee)
+        representation = @subject.represent(@representee)
+
         @serialized_hash = if @root
+                             limit_exposure_to_method(representation[@root.to_s], @expected_representable)        
                              representation[@root.to_s].serializable_hash
-                           else
+                           else        
+                             limit_exposure_to_method(representation, @expected_representable)
                              representation.serializable_hash
                            end
 
@@ -95,6 +117,7 @@ module GrapeEntityMatchers
         if @conditions.nil?
           @subject.exposures[@expected_representable] == hash
         else
+          #@representee.call(@conditions.keys.first)
           exposures = @subject.exposures[@expected_representable].dup
           exposures.delete(:if) != nil && exposures == hash
         end
@@ -102,8 +125,9 @@ module GrapeEntityMatchers
       
       def check_value
         if @other_entity
-          # we aren't setting a value here, so it's going to be empty
-          @serialized_hash[@actual_representation || @expected_representable] == {}
+          other_representation = @other_entity.represent(@represented_attribute)
+          other_representation.exposures.keys.each {|key| allow(other_representation).to receive(key).and_return(:value)}
+          @serialized_hash[@actual_representation || @expected_representable] ==  other_representation.serializable_hash
         else
           @serialized_hash[@actual_representation || @expected_representable] == :value
         end
