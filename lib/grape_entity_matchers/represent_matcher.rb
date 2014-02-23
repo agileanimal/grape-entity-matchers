@@ -10,7 +10,7 @@ module GrapeEntityMatchers
     class RepresentMatcher
       def initialize(representable)
         @expected_representable = representable
-        RSpec::Mocks::setup(self)
+        RSpec::Mocks::setup
       end
 
       def matches?(subject)
@@ -85,7 +85,7 @@ module GrapeEntityMatchers
         @representee = double("RepresetedObject")
         @represented_attribute ||= :value
 
-        expect(@representee).to receive(@expected_representable).and_return(@represented_attribute)       
+        allow(@representee).to receive(@expected_representable).and_return(@represented_attribute)       
         expect(@representee).to receive(@conditions.keys.first).and_return(@conditions.values.first) unless @conditions.nil?
         
         representation = @subject.represent(@representee)

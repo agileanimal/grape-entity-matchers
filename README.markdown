@@ -6,7 +6,7 @@
 
 This gem provides shoulda-style matchers for Rspec to [GrapeEntity](https://github.com/agileanimal/grape-entity).
 
-Currently compatible with Rspec 2. For Rspec 3 use the rspec3 branch.
+Currently compatible Rspec 3.
 
 ## Using the Matchers
 
@@ -27,9 +27,9 @@ it { should represent(:dog).using(PetEntity) }
 it { should represent(:cat).as(:kitty).using(PetEntity) }
 ```
 
-## Support Rspec 3.0.0
+## Support Rspec 2.0.0
 
-Rspec 3.0.0 is in beta 2 at the time of writing this. Support for Rspec will be added on the ```rspec3``` branch.
+Rspec 2.0.0 is no longer support in future releases. For Rspec 2 use version 0.4.0.
 
 ## Minitest
 
