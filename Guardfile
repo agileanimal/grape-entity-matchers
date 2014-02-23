@@ -6,7 +6,7 @@ guard 'bundler' do
   # watch(/^.+\.gemspec/)
 end
 
-guard :rspec, cmd: 'bundle exec rspec'  do
+guard :rspec, cmd: 'bundle exec rspec --color --fail-fast --format=progress'  do
   watch(%r{^spec/.+_spec\.rb$})
   watch(%r{^lib/(.+)\.rb$})     { |m| "spec/#{m[1]}_spec.rb" }
   watch(%r{^spec/support/shared_versioning_examples.rb$}) { |m| "spec/" }
