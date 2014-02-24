@@ -10,7 +10,7 @@ describe GrapeEntityMatchers do
       include Grape::Entity::DSL
       entity :name, :age do
         expose :date_of_birth, :as => :birthday
-        expose :cat, :as => :cat, :using => PetEntity
+        expose :cat, :as => :feline, :using => PetEntity
         expose :dog, :using => PetEntity
         expose :secret, :if => lambda{ |person, options| person.authorized? }
         expose :super_dooper_secret, :as => :top_secret, :if => lambda{ |person, options| person.authorized? }
@@ -19,6 +19,11 @@ describe GrapeEntityMatchers do
     class Vet < Grape::Entity
       root 'vets', 'vet'
       expose :name
+    end
+    class ItemEntity < Grape::Entity
+      expose :name
+      expose :name, as: :title
+      expose :sub_items, as: :children, using: ItemEntity
     end
     nil
   end
@@ -49,7 +54,7 @@ describe GrapeEntityMatchers do
     it { should_not represent(:super_dooper_secret).when( :authorized? => true ) }
     
     it { should represent(:dog).using(PetEntity) }
-    it { should represent(:cat).as(:cat).using(PetEntity) }
+    it { should represent(:cat).as(:feline).using(PetEntity) }
     it { should_not represent(:cat).using(PetEntity) }
 
   end
@@ -57,5 +62,11 @@ describe GrapeEntityMatchers do
   context 'matchers within a root' do
     subject(:entity) { Vet }
     it { should represent(:name).with_root('vet') }
+  end
+
+  context 'matchers with with a tree structure' do
+    subject(:entity) { ItemEntity }
+    it { should represent(:name).as(:title) }
+    it { should represent(:sub_items).as(:children).using(ItemEntity) }
   end
 end

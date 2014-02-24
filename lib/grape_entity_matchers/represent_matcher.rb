@@ -32,7 +32,9 @@ module GrapeEntityMatchers
       def using(other_entity)
         @other_entity = other_entity
         @represented_attribute  = double("RepresetedAttribute")      
-        @other_entity.exposures.keys.each {|key| allow(@represented_attribute ).to receive(key).and_return(:value)}
+        @other_entity.exposures.keys.each do |key| 
+          allow(@represented_attribute ).to receive(key).and_return( @other_entity.exposures[key].nil? ? :value : nil)
+        end
         self
       end
 
@@ -126,7 +128,11 @@ module GrapeEntityMatchers
       def check_value
         if @other_entity
           other_representation = @other_entity.represent(@represented_attribute)
-          other_representation.exposures.keys.each {|key| allow(other_representation).to receive(key).and_return(:value)}
+
+          other_representation.exposures.keys.each do |key| 
+            allow(other_representation).to receive(key).and_return( other_representation.exposures[key].nil? ? :value : nil)
+          end
+
           @serialized_hash[@actual_representation || @expected_representable] ==  other_representation.serializable_hash
         else
           @serialized_hash[@actual_representation || @expected_representable] == :value
