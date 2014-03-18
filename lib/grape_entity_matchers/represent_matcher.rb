@@ -31,7 +31,7 @@ module GrapeEntityMatchers
       
       def using(other_entity)
         @other_entity = other_entity
-        @represented_attribute  = double("RepresetedAttribute")      
+        @represented_attribute  = double("RepresentedAttribute")      
         @other_entity.exposures.keys.each do |key| 
           allow(@represented_attribute ).to receive(key).and_return( @other_entity.exposures[key].nil? ? :value : nil)
         end
@@ -84,7 +84,7 @@ module GrapeEntityMatchers
       end
       
       def check_methods
-        @representee = double("RepresetedObject")
+        @representee = double("RepresentedObject")
         @represented_attribute ||= :value
 
         expect(@representee).to receive(@expected_representable).and_return(@represented_attribute)       
