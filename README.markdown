@@ -13,23 +13,23 @@ Currently compatible Rspec 3.
 Here are some examples of the matchers in use:
 
 ``` ruby
-it { should represent(:date_of_birth).as(:brithday) }
-it { should_not represent(:name).as(:brithday) }
-it { should_not represent(:date_of_birth) }
-    
-it { should represent(:secret).when( :authorized? => true ) }
-it { should_not represent(:secret).when( :authorized? => false ) }
-    
-it { should represent(:super_dooper_secret).as(:top_secret).when( :authorized? => true ) }
-it { should_not represent(:super_dooper_secret).as(:top_secret).when( :authorized? => false ) }
+it { is_expected.to represent(:date_of_birth).as(:brithday) }
+it { is_expected.to_not represent(:name).as(:brithday) }
+it { is_expected.to_not represent(:date_of_birth) }
 
-it { should represent(:dog).using(PetEntity) }
-it { should represent(:cat).as(:kitty).using(PetEntity) }
+it { is_expected.to represent(:secret).when( :authorized? => true ) }
+it { is_expected.to_not represent(:secret).when( :authorized? => false ) }
+
+it { is_expected.to represent(:super_dooper_secret).as(:top_secret).when( :authorized? => true ) }
+it { is_expected.to_not represent(:super_dooper_secret).as(:top_secret).when( :authorized? => false ) }
+
+it { is_expected.to represent(:dog).using(PetEntity) }
+it { is_expected.to represent(:cat).as(:kitty).using(PetEntity) }
 ```
 
-## Support Rspec 2.0.0
+## Support for Rspec 2.0.0
 
-Rspec 2.0.0 is no longer support in future releases. For Rspec 2 use version 0.4.0.
+Rspec 2.0.0 is no longer supported. For Rspec 2 use version 0.4.0.
 
 ## Minitest
 
@@ -63,4 +63,4 @@ MIT License. See LICENSE for details.
 
 ## Copyright
 
-Copyright (c) 2013 Mark Madsen, and AGiLE ANiMAL INC.
+Copyright (c) 2014 Mark Madsen, and AGiLE ANiMAL INC.

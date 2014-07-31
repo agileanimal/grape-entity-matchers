@@ -1,7 +1,10 @@
 Next Release
 ============
-* move support from rspec 2.x to rspec 3.x
 * add support for minitest
+
+1.0.0 (07/30/2014)
+============
+* move support from rspec 2.x to rspec 3.x
 
 0.4.1 (02/22/2014)
 ============
