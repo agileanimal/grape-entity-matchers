@@ -32,41 +32,41 @@ describe GrapeEntityMatchers do
     subject(:entity) { Person::Entity }
 
     # TODO: move the tests to this format to shadow the thoughtbot tests.
-    # it { should represent(:name) }
-    context "should ensure the representation includes the specified property" do
-      it { should represent :name}
+    # it { is_expected.to represent(:name) }
+    context "ensure the representation includes the specified property" do
+      it { is_expected.to represent :name}
     end
-    
-    it { should represent :name}
-    
-    it { should represent(:date_of_birth).as(:birthday) }
-    
-    it { should_not represent(:t_shirt_size) }
-    it { should_not represent(:t_shirt_size).as(:birthday) }
-    it { should_not represent(:name).as(:brithday) }
-    it { should_not represent(:date_of_birth) }
-    
-    it { should represent(:secret).when( :authorized? => true ) }
-    it { should_not represent(:secret).when( :authorized? => false ) }
 
-    it { should represent(:super_dooper_secret).as(:top_secret).when( :authorized? => true ) }
-    it { should_not represent(:super_dooper_secret).as(:top_secret).when( :authorized? => false ) }
-    it { should_not represent(:super_dooper_secret).when( :authorized? => true ) }
-    
-    it { should represent(:dog).using(PetEntity) }
-    it { should represent(:cat).as(:feline).using(PetEntity) }
-    it { should_not represent(:cat).using(PetEntity) }
+    it { is_expected.to represent :name}
+
+    it { is_expected.to represent(:date_of_birth).as(:birthday) }
+
+    it { is_expected.to_not represent(:t_shirt_size) }
+    it { is_expected.to_not represent(:t_shirt_size).as(:birthday) }
+    it { is_expected.to_not represent(:name).as(:brithday) }
+    it { is_expected.to_not represent(:date_of_birth) }
+
+    it { is_expected.to represent(:secret).when( :authorized? => true ) }
+    it { is_expected.to_not represent(:secret).when( :authorized? => false ) }
+
+    it { is_expected.to represent(:super_dooper_secret).as(:top_secret).when( :authorized? => true ) }
+    it { is_expected.to_not represent(:super_dooper_secret).as(:top_secret).when( :authorized? => false ) }
+    it { is_expected.to_not represent(:super_dooper_secret).when( :authorized? => true ) }
+
+    it { is_expected.to represent(:dog).using(PetEntity) }
+    it { is_expected.to represent(:cat).as(:feline).using(PetEntity) }
+    it { is_expected.to_not represent(:cat).using(PetEntity) }
 
   end
 
   context 'matchers within a root' do
     subject(:entity) { Vet }
-    it { should represent(:name).with_root('vet') }
+    it { is_expected.to represent(:name).with_root('vet') }
   end
 
   context 'matchers with with a tree structure' do
     subject(:entity) { ItemEntity }
-    it { should represent(:name).as(:title) }
-    it { should represent(:sub_items).as(:children).using(ItemEntity) }
+    it { is_expected.to represent(:name).as(:title) }
+    it { is_expected.to represent(:sub_items).as(:children).using(ItemEntity) }
   end
 end
