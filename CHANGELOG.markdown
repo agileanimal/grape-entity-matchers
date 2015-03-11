@@ -2,6 +2,11 @@ Next Release
 ============
 * add support for minitest
 
+1.0.1 (07/30/2015)
+============
+* added fix for double from @zephyr-dev
+* added formatters from @cveneziani
+
 1.0.0 (07/30/2014)
 ============
 * move support from rspec 2.x to rspec 3.x
