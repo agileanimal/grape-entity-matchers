@@ -29,6 +29,9 @@ describe GrapeEntityMatchers do
       expose :name, as: :title
       expose :sub_items, as: :children, using: ItemEntity
     end
+    class ItemEntityDoc < Grape::Entity
+      expose :name, documentation: { type: 'String', desc: 'Name' }
+    end
     nil
   end
 
@@ -72,5 +75,10 @@ describe GrapeEntityMatchers do
     subject(:entity) { ItemEntity }
     it { is_expected.to represent(:name).as(:title) }
     it { is_expected.to represent(:sub_items).as(:children).using(ItemEntity) }
+  end
+
+  context 'matchers does ignore documentation' do
+    subject(:entity) { ItemEntityDoc }
+    it { is_expected.to represent(:name) }
   end
 end

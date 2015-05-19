@@ -13,9 +13,14 @@ module GrapeEntityMatchers
         @expected_representable = representable
         RSpec::Mocks::setup
       end
-      
+
       def matches?(subject)
         @subject = subject
+
+        # remove :documentation
+        if @subject.exposures[@expected_representable]
+          @subject.exposures[@expected_representable].delete(:documentation)
+        end
 
         check_methods && verify_exposure && check_value
       end
