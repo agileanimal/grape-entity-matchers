@@ -13,8 +13,8 @@ Currently compatible Rspec 3.
 Here are some examples of the matchers in use:
 
 ``` ruby
-it { is_expected.to represent(:date_of_birth).as(:brithday) }
-it { is_expected.to_not represent(:name).as(:brithday) }
+it { is_expected.to represent(:date_of_birth).as(:birthday) }
+it { is_expected.to_not represent(:name).as(:birthday) }
 it { is_expected.to_not represent(:date_of_birth) }
 
 it { is_expected.to represent(:secret).when( :authorized? => true ) }
