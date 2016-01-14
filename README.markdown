@@ -25,6 +25,8 @@ it { is_expected.to_not represent(:super_dooper_secret).as(:top_secret).when( :a
 
 it { is_expected.to represent(:dog).using(PetEntity) }
 it { is_expected.to represent(:cat).as(:kitty).using(PetEntity) }
+
+it { is_expected.to represent(:name).with_documentation(type: String) }
 ```
 
 ## Support for Rspec 2.0.0
