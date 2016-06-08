@@ -2,6 +2,11 @@ Next Release
 ============
 * add support for minitest
 
+1.1.0 (06/08/2016)
+===========
+* support grape-entity ~> 0.4.6
+* add with_documentation method to RepresentMatcher
+
 1.0.1 (07/30/2015)
 ============
 * added fix for double from @zephyr-dev
