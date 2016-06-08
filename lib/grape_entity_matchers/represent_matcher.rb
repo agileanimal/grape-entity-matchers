@@ -17,7 +17,7 @@ module GrapeEntityMatchers
       def matches?(subject)
         @subject = subject
 
-        check_methods && verify_exposure && check_value
+        check_methods && has_exposure? && verify_exposure && check_value
       end
 
       def as(representation)
@@ -32,6 +32,11 @@ module GrapeEntityMatchers
 
       def when(conditions)
         @conditions = conditions
+        self
+      end
+
+      def with_documentation(documentation)
+        @documentation = documentation
         self
       end
 
@@ -84,7 +89,7 @@ module GrapeEntityMatchers
       private
 
       def limit_exposure_to_method(entity, method)
-        allow(entity).to receive(:valid_exposures).and_return(
+        allow(entity).to receive(:root_exposures).and_return(
           entity.exposures.slice(method)
         )
       end
@@ -117,18 +122,29 @@ module GrapeEntityMatchers
         methods_called
       end
 
+      def has_exposure?
+        @subject.exposures.has_key?(@expected_representable)
+      end
+
       def verify_exposure
         hash = {}
         hash[:using] = @other_entity unless @other_entity.nil?
         hash[:as] = @actual_representation unless @actual_representation.nil?
         hash[:format_with] = @formatter if @formatter
 
-        if @conditions.nil?
-          @subject.exposures[@expected_representable] == hash
+        exposure = @subject.exposures[@expected_representable].dup
+
+        # ignore documentation unless with_documentation was specified
+        if @documentation
+          hash[:documentation] = @documentation
         else
-          #@representee.call(@conditions.keys.first)
-          exposures = @subject.exposures[@expected_representable].dup
-          exposures.delete(:if) != nil && exposures == hash
+          exposure.delete(:documentation)
+        end
+
+        if @conditions.nil?
+          exposure == hash
+        else
+          exposure.delete(:if) != nil && exposure == hash
         end
       end
 
