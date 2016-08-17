@@ -13,7 +13,7 @@ module GrapeEntityMatchers
         @expected_representable = representable
         RSpec::Mocks::setup
       end
-      
+
       def matches?(subject)
         @subject = subject
 

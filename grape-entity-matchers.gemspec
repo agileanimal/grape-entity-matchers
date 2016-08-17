@@ -14,7 +14,7 @@ Gem::Specification.new do |s|
 
   s.rubyforge_project = "grape-entity-matchers"
 
-  s.add_runtime_dependency 'grape-entity', '~> 0.4.6'
+  s.add_runtime_dependency 'grape-entity', '0.4.8'
   s.add_runtime_dependency 'rspec', '>= 3.2.0'
 
 
