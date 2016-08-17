@@ -2,6 +2,10 @@ Next Release
 ============
 * add support for minitest
 
+1.2.0 (08/16/2016)
+===========
+* support grape-entity 0.4.8
+
 1.1.0 (06/08/2016)
 ===========
 * support grape-entity ~> 0.4.6
