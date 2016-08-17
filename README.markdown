@@ -27,6 +27,9 @@ it { is_expected.to represent(:dog).using(PetEntity) }
 it { is_expected.to represent(:cat).as(:kitty).using(PetEntity) }
 
 it { is_expected.to represent(:name).with_documentation(type: String) }
+
+it { is_expected.to document(:name).with(type: String, desc: 'Name of the person') }
+it { is_expected.to document(:name).type(String).desc('Name of the person') }
 ```
 
 ## Support for Rspec 2.0.0
