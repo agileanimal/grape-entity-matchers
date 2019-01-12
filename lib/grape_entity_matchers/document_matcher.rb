@@ -1,3 +1,5 @@
+require 'active_support/core_ext/hash/compact'
+
 module GrapeEntityMatchers
   module DocumentMatcher
     def document(documentable)
@@ -5,6 +7,8 @@ module GrapeEntityMatchers
     end
 
     class DocumentMatcher
+      include Exposures
+
       def initialize(documentable)
         @expected_documentable = documentable
       end
@@ -75,26 +79,25 @@ module GrapeEntityMatchers
 
       def match_documentation
         if has_documentation?
-          exposure[:documentation].slice(*expected_documentation.keys)
+          actual_documentation.slice(*expected_documentation.keys)
         end
       end
 
       def actual_documentation
-        exposure.try(:[], :documentation)
+        exposure.documentation
       end
 
       def has_documentation?
-        @subject.exposures.has_key?(@expected_documentable) &&
-            exposure[:documentation]
+        exposures.has_key?(@expected_documentable) && actual_documentation
       end
 
       def exposure
-        @subject.exposures[@expected_documentable]
+        exposures[@expected_documentable]
       end
 
       def verify_documentation
         if @documentation
-          @documentation == exposure[:documentation]
+          @documentation == actual_documentation
         else
           expected_documentation == match_documentation
         end

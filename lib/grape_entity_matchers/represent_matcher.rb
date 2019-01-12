@@ -9,6 +9,8 @@ module GrapeEntityMatchers
 
     class RepresentMatcher
       include ::RSpec::Mocks::ExampleMethods
+      include Exposures
+
       def initialize(representable)
         @expected_representable = representable
         RSpec::Mocks::setup
@@ -43,9 +45,8 @@ module GrapeEntityMatchers
       def using(other_entity)
         @other_entity = other_entity
         @represented_attribute  = double("RepresentedAttribute")
-        @other_entity.exposures.keys.each do |key|
-          allow(@represented_attribute ).to receive(key).and_return( @other_entity.exposures[key].nil? ? :value : nil)
-        end
+        other_entity_exposures =  extract_exposures(@other_entity.root_exposures)
+        allow_exposure_methods(@represented_attribute, other_entity_exposures)
         self
       end
 
@@ -90,7 +91,7 @@ module GrapeEntityMatchers
 
       def limit_exposure_to_method(entity, method)
         allow(entity).to receive(:root_exposures).and_return(
-          entity.exposures.slice(method)
+          extract_exposures(entity.root_exposures).slice(method).values
         )
       end
 
@@ -98,10 +99,19 @@ module GrapeEntityMatchers
         @representee = double("RepresentedObject")
         @represented_attribute ||= :value
 
-        allow(@representee).to receive(@expected_representable).and_return(@represented_attribute)
-        expect(@representee).to receive(@conditions.keys.first).and_return(@conditions.values.first) unless @conditions.nil?
+        # The condition will only be checked if entity has the exposure
+        if exposure_keys.include?(@actual_representation || @expected_representable) && !@conditions.nil?
+          expect(@representee).to receive(@conditions.keys.first).and_return(@conditions.values.first) unless @conditions.nil?
+        end
 
-        representation = @subject.represent(@representee)
+        if @actual_representation
+          exposure = exposures.values.find { |exposure| exposure.key == @actual_representation }
+          allow(@representee).to receive(exposure.attribute).and_return(@represented_attribute) if exposure
+        else
+          allow(@representee).to receive(@expected_representable).and_return(@represented_attribute)
+        end
+
+        representation = @subject.represent(@representee, only: [@actual_representation || @expected_representable])
 
         @serialized_hash = if @root
                              limit_exposure_to_method(representation[@root.to_s], @expected_representable)
@@ -123,7 +133,11 @@ module GrapeEntityMatchers
       end
 
       def has_exposure?
-        @subject.exposures.has_key?(@expected_representable)
+        exposures.has_key?(@expected_representable)
+      end
+
+      def exposure_keys
+        exposures.values.map { |exposure| exposure.key || exposure.attribute }
       end
 
       def verify_exposure
@@ -132,7 +146,7 @@ module GrapeEntityMatchers
         hash[:as] = @actual_representation unless @actual_representation.nil?
         hash[:format_with] = @formatter if @formatter
 
-        exposure = @subject.exposures[@expected_representable].dup
+        exposure = exposures[@expected_representable].send(:options).dup
 
         # ignore documentation unless with_documentation was specified
         if @documentation
@@ -148,13 +162,17 @@ module GrapeEntityMatchers
         end
       end
 
+      def allow_exposure_methods(entity, exposures)
+        exposures.keys.each do |key|
+          allow(entity).to receive(key).and_return(exposures[key].nil? ? :value : nil)
+        end
+      end
+
       def check_value
         if @other_entity
           other_representation = @other_entity.represent(@represented_attribute)
-
-          other_representation.exposures.keys.each do |key|
-            allow(other_representation).to receive(key).and_return( other_representation.exposures[key].nil? ? :value : nil)
-          end
+          other_representation_exposures = extract_exposures(other_representation.root_exposures)
+          allow_exposure_methods(other_representation, other_representation_exposures)
 
           @serialized_hash[@actual_representation || @expected_representable] ==  other_representation.serializable_hash
         else

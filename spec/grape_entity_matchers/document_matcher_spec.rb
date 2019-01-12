@@ -58,4 +58,29 @@ describe GrapeEntityMatchers::DocumentMatcher do
   context "ensure that a specific documentation is not used" do
     it { is_expected.to_not document(:str).with(type: String, required: false) }
   end
+
+  context "with a nested exposure" do
+    before(:all) do
+      class TestEntityWithNested < Grape::Entity
+        expose :nested do
+          expose :str, documentation:  {
+            type: String,
+            desc: 'Some string',
+            default: 'xyz',
+            required: false,
+            values: ['abc', 'xyz']
+          }
+          expose :no_doc
+        end
+      end
+    end
+
+    subject(:entity) do
+      TestEntityWithNested
+    end
+
+    context "ensure that a nested exposure matches the documentation" do
+      it { is_expected.to document(:nested__str).with(documentation) }
+    end
+  end
 end
