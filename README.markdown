@@ -1,6 +1,6 @@
 # Grape::Entity::Matchers
 
-[![Build Status](https://travis-ci.org/agileanimal/grape-entity-matchers.png?branch=master)](https://travis-ci.org/agileanimal/grape-entity-matchers)
+[![Build Status](https://travis-ci.org/agileanimal/grape-entity-matchers.svg?branch=master)](https://travis-ci.org/agileanimal/grape-entity-matchers)
 
 ## Introduction
 
