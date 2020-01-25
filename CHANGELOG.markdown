@@ -8,9 +8,10 @@
 
   # 1.3.0 (01/24/2020)
 
-- support for grape-entity >= 0.5.0
-- require ruby >= 2.5
-- fix deprecation warnings
+- support for grape-entity >= 0.5.0 from Tim Perkins
+- move to ruby >= 2.5 from @jcmfernandes
+- fix deprecation warnings from @jcmfernandes
+- minor project updates from @olleolleolle
 
   # 1.2.0 (08/16/2016)
 
