@@ -1,5 +1,3 @@
-require 'active_support/core_ext/hash/compact'
-
 module GrapeEntityMatchers
   module DocumentMatcher
     def document(documentable)

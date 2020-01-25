@@ -5,6 +5,8 @@ Next Release
 1.3.0 (unreleased)
 ==========
 * support for grape-entity >= 0.5.0
+* require ruby >= 2.5
+* fix deprecation warnings
 
 1.2.0 (08/16/2016)
 ===========

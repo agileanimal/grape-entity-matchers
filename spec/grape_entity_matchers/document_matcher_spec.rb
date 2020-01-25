@@ -32,7 +32,7 @@ describe GrapeEntityMatchers::DocumentMatcher do
 
   context "ensure individual keys of documentation" do
     it { is_expected.to document(:str).type(String) }
-    it { is_expected.not_to document(:str).type(Fixnum) }
+    it { is_expected.not_to document(:str).type(Integer) }
 
     it { is_expected.to document(:str).desc('Some string') }
     it { is_expected.not_to document(:str).desc('Some other string') }
