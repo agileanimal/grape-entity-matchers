@@ -12,24 +12,30 @@ Currently compatible Rspec 3.
 
 Here are some examples of the matchers in use:
 
-``` ruby
-it { is_expected.to represent(:date_of_birth).as(:birthday) }
-it { is_expected.to_not represent(:name).as(:birthday) }
-it { is_expected.to_not represent(:date_of_birth) }
+```ruby
+RSpec.describe TestEntity do
 
-it { is_expected.to represent(:secret).when( :authorized? => true ) }
-it { is_expected.to_not represent(:secret).when( :authorized? => false ) }
+  subject(:entity) { TestEntity }
 
-it { is_expected.to represent(:super_dooper_secret).as(:top_secret).when( :authorized? => true ) }
-it { is_expected.to_not represent(:super_dooper_secret).as(:top_secret).when( :authorized? => false ) }
+  it { is_expected.to represent(:date_of_birth).as(:birthday) }
+  it { is_expected.to_not represent(:name).as(:birthday) }
+  it { is_expected.to_not represent(:date_of_birth) }
 
-it { is_expected.to represent(:dog).using(PetEntity) }
-it { is_expected.to represent(:cat).as(:kitty).using(PetEntity) }
+  it { is_expected.to represent(:secret).when(:authorized? => true) }
+  it { is_expected.to_not represent(:secret).when(:authorized? => false) }
 
-it { is_expected.to represent(:name).with_documentation(type: String) }
+  it { is_expected.to represent(:super_dooper_secret).as(:top_secret).when(:authorized? => true) }
+  it { is_expected.to_not represent(:super_dooper_secret).as(:top_secret).when(:authorized? => false) }
 
-it { is_expected.to document(:name).with(type: String, desc: 'Name of the person') }
-it { is_expected.to document(:name).type(String).desc('Name of the person') }
+  it { is_expected.to represent(:dog).using(PetEntity) }
+  it { is_expected.to represent(:cat).as(:kitty).using(PetEntity) }
+
+  it { is_expected.to represent(:name).with_documentation(type: String) }
+
+  it { is_expected.to document(:name).with(type: String, desc: 'Name of the person') }
+  it { is_expected.to document(:name).type(String).desc('Name of the person') }
+
+end
 ```
 
 ## Support for Rspec 2.0.0
